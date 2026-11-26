@@ -96,44 +96,35 @@ export default function App() {
           <div className="flex items-center gap-3">
             {/* Logo Komputasi Flat Pastel (Terminal Radar Node) */}
             <div className="w-11 h-11 rounded-xl bg-[#f8edd8] border-2 border-slate-800 flex items-center justify-center shrink-0 shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]">
-              <svg
-                viewBox="0 0 64 64"
-                fill="none"
-                className="w-8 h-8"
-                aria-hidden="true"
-              >
-                <path
-                  d="M8 18H56"
-                  stroke="#1e293b"
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                />
-                <circle cx="14" cy="12" r="2.5" fill="#fcd5ce" stroke="#1e293b" strokeWidth="1.5" />
-                <circle cx="22" cy="12" r="2.5" fill="#c3e3f5" stroke="#1e293b" strokeWidth="1.5" />
-                <circle
-                  cx="32"
-                  cy="38"
-                  r="11"
-                  fill="#c3e3f5"
-                  stroke="#1e293b"
-                  strokeWidth="3.5"
-                />
-                <circle
-                  cx="32"
-                  cy="38"
-                  r="4"
-                  fill="#fcd5ce"
-                  stroke="#1e293b"
-                  strokeWidth="2.5"
-                />
-                <path
-                  d="M32 23V27M32 49V53M17 38H21M43 38H47"
-                  stroke="#1e293b"
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </div>
+  <svg
+    viewBox="0 0 64 64"
+    fill="none"
+    className="w-8 h-8"
+    aria-hidden="true"
+  >
+    <path
+      d="M32 10C22.0589 10 14 18.0589 14 28C14 40.5 32 54 32 54C32 54 50 40.5 50 28C50 18.0589 41.9411 10 32 10Z"
+      fill="#c3e3f5"
+      stroke="#1e293b"
+      strokeWidth="4"
+      strokeLinejoin="round"
+    />
+    <circle
+      cx="30"
+      cy="26"
+      r="7"
+      fill="#fcd5ce"
+      stroke="#1e293b"
+      strokeWidth="3.5"
+    />
+    <path
+      d="M35.5 31.5L41 37"
+      stroke="#1e293b"
+      strokeWidth="4"
+      strokeLinecap="round"
+    />
+  </svg>
+</div>
 
             <div>
               <div className="flex items-center gap-1.5">
