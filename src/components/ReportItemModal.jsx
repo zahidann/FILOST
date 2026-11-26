@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import { uploadItem } from '../services/itemService';
 
-// Daftar spot FILKOM UB beserta koordinat GPS akuratnya
 const FILKOM_SPOTS = [
   { name: 'Junction FILKOM', lat: -7.95395, lng: 112.61465 },
   { name: 'Gedung F (Ruang Kuliah / Lobi)', lat: -7.95365, lng: 112.61445 },
@@ -95,20 +94,23 @@ export default function ReportItemModal({ isOpen, onClose, onAddItem }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl border border-slate-200 overflow-hidden my-8">
-        {/* Header Modal */}
-        <div className="bg-[#0B192C] text-white px-6 py-4 flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 overflow-y-auto">
+      <div className="bg-[#faf6f0] rounded-2xl w-full max-w-2xl border-2 border-slate-800 shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] overflow-hidden my-8">
+        {/* Header Modal Flat Pastel Sky */}
+        <div className="bg-[#c3e3f5] text-slate-800 px-6 py-4 flex items-center justify-between border-b-2 border-slate-800">
           <div>
-            <h2 className="text-lg font-bold">Lapor Barang Temuan</h2>
-            <p className="text-xs text-sky-200/80">
+            <span className="font-mono-tech text-[10px] font-bold uppercase tracking-wider bg-[#f8edd8] px-2 py-0.5 rounded border border-slate-800">
+              NEW_ITEM_REPORT
+            </span>
+            <h2 className="text-lg font-bold mt-1">Lapor Barang Temuan</h2>
+            <p className="text-xs font-medium text-slate-700">
               Lengkapi informasi barang dan pertanyaan verifikasi untuk pemilik asli.
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-1.5 rounded-lg transition cursor-pointer"
+            className="bg-[#f8edd8] hover:bg-[#fcd5ce] text-slate-800 border-2 border-slate-800 p-1.5 rounded-xl transition cursor-pointer shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]"
           >
             <X className="w-5 h-5" />
           </button>
@@ -118,8 +120,8 @@ export default function ReportItemModal({ isOpen, onClose, onAddItem }) {
         <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[82vh] overflow-y-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="sm:col-span-2">
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                Judul Barang <span className="text-rose-500">*</span>
+              <label className="block font-mono-tech text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5">
+                Judul Barang <span className="text-rose-600">*</span>
               </label>
               <input
                 type="text"
@@ -127,18 +129,18 @@ export default function ReportItemModal({ isOpen, onClose, onAddItem }) {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Contoh: KTM TIF a.n. Budi / Charger Lenovo"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border-2 border-slate-800 text-sm text-slate-800 focus:outline-none focus:ring-4 focus:ring-[#c3e3f5]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                Kategori <span className="text-rose-500">*</span>
+              <label className="block font-mono-tech text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5">
+                Kategori <span className="text-rose-600">*</span>
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border-2 border-slate-800 text-sm font-bold text-slate-800 focus:outline-none focus:ring-4 focus:ring-[#c3e3f5]"
               >
                 <option value="KTM">KTM</option>
                 <option value="Elektronik">Elektronik</option>
@@ -149,8 +151,8 @@ export default function ReportItemModal({ isOpen, onClose, onAddItem }) {
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-              Deskripsi Singkat <span className="text-rose-500">*</span>
+            <label className="block font-mono-tech text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5">
+              Deskripsi Singkat <span className="text-rose-600">*</span>
             </label>
             <textarea
               rows={2}
@@ -158,21 +160,21 @@ export default function ReportItemModal({ isOpen, onClose, onAddItem }) {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Jelaskan kondisi umum barang (tanpa membocorkan ciri rahasia)..."
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-white border-2 border-slate-800 text-sm text-slate-800 focus:outline-none focus:ring-4 focus:ring-[#c3e3f5]"
             />
           </div>
 
           {/* Pilihan Titik Peta FILKOM + Detail Ruangan */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                <MapPin className="w-3.5 h-3.5 text-sky-600" />
-                <span>Area / Gedung FILKOM <span className="text-rose-500">*</span></span>
+              <label className="flex items-center gap-1.5 font-mono-tech text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5">
+                <MapPin className="w-3.5 h-3.5 text-slate-800" />
+                <span>Area / Gedung FILKOM <span className="text-rose-600">*</span></span>
               </label>
               <select
                 value={selectedSpotIndex}
                 onChange={(e) => setSelectedSpotIndex(Number(e.target.value))}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border-2 border-slate-800 text-sm font-bold text-slate-800 focus:outline-none focus:ring-4 focus:ring-[#c3e3f5]"
               >
                 {FILKOM_SPOTS.map((spot, idx) => (
                   <option key={spot.name} value={idx}>
@@ -183,23 +185,23 @@ export default function ReportItemModal({ isOpen, onClose, onAddItem }) {
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+              <label className="block font-mono-tech text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5">
                 Detail Titik (Opsional)
               </label>
               <input
                 type="text"
                 value={locationDetail}
                 onChange={(e) => setLocationDetail(e.target.value)}
-                placeholder="Misal: Ruang F3.2 / Meja Utara"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                placeholder="Misal: Lantai 3, Ruang F3.2"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border-2 border-slate-800 text-sm text-slate-800 focus:outline-none focus:ring-4 focus:ring-[#c3e3f5]"
               />
             </div>
           </div>
 
           <div>
-            <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-              <Phone className="w-3.5 h-3.5 text-sky-600" />
-              <span>Kontak Penemu / Satpam (WA) <span className="text-rose-500">*</span></span>
+            <label className="flex items-center gap-1.5 font-mono-tech text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5">
+              <Phone className="w-3.5 h-3.5 text-slate-800" />
+              <span>Kontak Penemu / Satpam (WA) <span className="text-rose-600">*</span></span>
             </label>
             <input
               type="text"
@@ -207,23 +209,23 @@ export default function ReportItemModal({ isOpen, onClose, onAddItem }) {
               value={finderContact}
               onChange={(e) => setFinderContact(e.target.value)}
               placeholder="Contoh: 0812-3456-7890 (Pos Satpam Gedung F)"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-white border-2 border-slate-800 text-sm text-slate-800 focus:outline-none focus:ring-4 focus:ring-[#c3e3f5]"
             />
           </div>
 
           {/* Upload Foto Barang */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-              Foto Barang <span className="text-rose-500">*</span>
+            <label className="block font-mono-tech text-xs font-bold uppercase tracking-wider text-slate-800 mb-1.5">
+              Foto Barang <span className="text-rose-600">*</span>
             </label>
             {imagePreview ? (
-              <div className="relative h-44 rounded-xl overflow-hidden border border-slate-300 bg-slate-100">
+              <div className="relative h-44 rounded-xl overflow-hidden border-2 border-slate-800 bg-[#f8edd8]">
                 <img
                   src={imagePreview}
                   alt="Preview barang"
                   className="w-full h-full object-cover"
                 />
-                <label className="absolute top-2.5 right-2.5 px-3 py-1.5 rounded-lg bg-slate-900/80 hover:bg-slate-900 text-white text-xs font-semibold cursor-pointer transition">
+                <label className="absolute top-2.5 right-2.5 px-3 py-1.5 rounded-lg bg-[#f8edd8] hover:bg-[#fcd5ce] text-slate-800 border-2 border-slate-800 text-xs font-bold cursor-pointer transition shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]">
                   Ganti Foto
                   <input
                     type="file"
@@ -234,13 +236,15 @@ export default function ReportItemModal({ isOpen, onClose, onAddItem }) {
                 </label>
               </div>
             ) : (
-              <label className="flex flex-col items-center justify-center h-36 border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-xl bg-slate-50 hover:bg-sky-50/40 transition cursor-pointer">
-                <Upload className="w-6 h-6 text-sky-600 mb-1.5" />
-                <span className="text-sm font-semibold text-slate-700">
+              <label className="flex flex-col items-center justify-center h-36 border-2 border-dashed border-slate-800 rounded-xl bg-white hover:bg-[#f8edd8]/60 transition cursor-pointer">
+                <div className="p-2 rounded-xl bg-[#c3e3f5] border-2 border-slate-800 mb-1.5">
+                  <Upload className="w-5 h-5 text-slate-800" />
+                </div>
+                <span className="text-sm font-bold text-slate-800">
                   Klik untuk unggah foto barang
                 </span>
-                <span className="text-xs text-slate-400 mt-0.5">
-                  PNG, JPG, atau WEBP (Maks. 5MB)
+                <span className="font-mono-tech text-xs text-slate-500 mt-0.5">
+                  PNG, JPG, WEBP (MAX 5MB)
                 </span>
                 <input
                   type="file"
@@ -252,15 +256,17 @@ export default function ReportItemModal({ isOpen, onClose, onAddItem }) {
             )}
           </div>
 
-          {/* Box Pertanyaan Rahasia */}
-          <div className="bg-[#0B192C] text-white p-4 rounded-xl border border-sky-500/30 space-y-3">
+          {/* Box Pertanyaan Rahasia - Tema Antique White & Pastel */}
+          <div className="bg-[#f8edd8] text-slate-800 p-4 rounded-xl border-2 border-slate-800 shadow-[3px_3px_0px_0px_rgba(30,41,59,1)] space-y-3">
             <div className="flex items-start gap-2.5">
-              <ShieldCheck className="w-5 h-5 text-sky-400 shrink-0 mt-0.5" />
+              <div className="p-1.5 rounded-lg bg-[#c3e3f5] border-2 border-slate-800 shrink-0 mt-0.5">
+                <ShieldCheck className="w-4 h-4 text-slate-800" />
+              </div>
               <div>
-                <h4 className="text-sm font-bold text-white">
+                <h4 className="text-sm font-bold text-slate-900">
                   Kunci Verifikasi Kepemilikan
                 </h4>
-                <p className="text-xs text-sky-200/80">
+                <p className="text-xs font-medium text-slate-700">
                   Nomor kontak Anda akan dikunci dan hanya terbuka jika pengklaim menjawab pertanyaan ini dengan benar.
                 </p>
               </div>
@@ -268,9 +274,9 @@ export default function ReportItemModal({ isOpen, onClose, onAddItem }) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="flex items-center gap-1 text-xs font-semibold text-sky-200 mb-1">
+                <label className="flex items-center gap-1 font-mono-tech text-xs font-bold text-slate-800 mb-1">
                   <Lock className="w-3 h-3" />
-                  <span>Pertanyaan Rahasia <span className="text-rose-400">*</span></span>
+                  <span>Pertanyaan Rahasia <span className="text-rose-600">*</span></span>
                 </label>
                 <input
                   type="text"
@@ -278,13 +284,13 @@ export default function ReportItemModal({ isOpen, onClose, onAddItem }) {
                   value={secretQuestion}
                   onChange={(e) => setSecretQuestion(e.target.value)}
                   placeholder="Contoh: Warna stiker di belakang?"
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-sky-400"
+                  className="w-full px-3 py-2 rounded-lg bg-white border-2 border-slate-800 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-[#c3e3f5]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-sky-200 mb-1">
-                  Jawaban Rahasia <span className="text-rose-400">*</span>
+                <label className="block font-mono-tech text-xs font-bold text-slate-800 mb-1">
+                  Jawaban Rahasia <span className="text-rose-600">*</span>
                 </label>
                 <input
                   type="text"
@@ -292,7 +298,7 @@ export default function ReportItemModal({ isOpen, onClose, onAddItem }) {
                   value={secretAnswer}
                   onChange={(e) => setSecretAnswer(e.target.value)}
                   placeholder="Contoh: biru"
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-sky-400"
+                  className="w-full px-3 py-2 rounded-lg bg-white border-2 border-slate-800 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-[#c3e3f5]"
                 />
               </div>
             </div>
@@ -304,14 +310,14 @@ export default function ReportItemModal({ isOpen, onClose, onAddItem }) {
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition cursor-pointer"
+              className="px-4 py-2.5 rounded-xl text-sm font-bold text-slate-700 bg-white hover:bg-slate-100 border-2 border-slate-800 transition cursor-pointer"
             >
               Batal
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-semibold shadow-sm transition cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#c3e3f5] hover:bg-[#a6cee3] disabled:opacity-60 text-slate-900 border-2 border-slate-800 text-sm font-bold shadow-[3px_3px_0px_0px_rgba(30,41,59,1)] active:translate-y-0.5 active:shadow-none transition cursor-pointer"
             >
               {isSubmitting ? (
                 <>

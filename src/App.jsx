@@ -29,7 +29,6 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Semua');
-  // Tab pemisah antara barang aktif ('Unclaimed') dan arsip ('Claimed')
   const [activeTab, setActiveTab] = useState('Unclaimed');
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [selectedClaimItem, setSelectedClaimItem] = useState(null);
@@ -90,11 +89,12 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf6f0] text-slate-800 font-sans pb-16">
+    <div className="min-h-screen bg-[#faf6f0] text-slate-800 pb-16">
       {/* Header Flat - Pastel Sky */}
       <header className="bg-[#c3e3f5] border-b-4 border-[#a6cee3] sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-center gap-3">
+            {/* Logo Komputasi Flat Pastel (Terminal Radar Node) */}
             <div className="w-11 h-11 rounded-xl bg-[#f8edd8] border-2 border-slate-800 flex items-center justify-center shrink-0 shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]">
               <svg
                 viewBox="0 0 64 64"
@@ -103,47 +103,64 @@ export default function App() {
                 aria-hidden="true"
               >
                 <path
-                  d="M32 10C22.0589 10 14 18.0589 14 28C14 40.5 32 54 32 54C32 54 50 40.5 50 28C50 18.0589 41.9411 10 32 10Z"
-                  fill="#c3e3f5"
-                  stroke="#fcd5ce"
-                  strokeWidth="4"
-                  strokeLinejoin="round"
+                  d="M8 18H56"
+                  stroke="#1e293b"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
                 />
+                <circle cx="14" cy="12" r="2.5" fill="#fcd5ce" stroke="#1e293b" strokeWidth="1.5" />
+                <circle cx="22" cy="12" r="2.5" fill="#c3e3f5" stroke="#1e293b" strokeWidth="1.5" />
                 <circle
-                  cx="30"
-                  cy="26"
-                  r="7"
-                  fill="#fcd5ce"
+                  cx="32"
+                  cy="38"
+                  r="11"
+                  fill="#c3e3f5"
                   stroke="#1e293b"
                   strokeWidth="3.5"
                 />
-                <path
-                  d="M35.5 31.5L41 37"
+                <circle
+                  cx="32"
+                  cy="38"
+                  r="4"
+                  fill="#fcd5ce"
                   stroke="#1e293b"
-                  strokeWidth="4"
+                  strokeWidth="2.5"
+                />
+                <path
+                  d="M32 23V27M32 49V53M17 38H21M43 38H47"
+                  stroke="#1e293b"
+                  strokeWidth="3.5"
                   strokeLinecap="round"
                 />
               </svg>
             </div>
 
             <div>
-              <h1 className="text-xl font-black tracking-tight text-slate-800 leading-none">
-                FI<span className="text-blue-600">LOST</span>
-              </h1>
-              <p className="text-[10px] sm:text-xs text-slate-600 font-bold mt-0.5 uppercase tracking-wider">
-                FILKOM Item Locator
+              <div className="flex items-center gap-1.5">
+                <h1 className="text-xl font-bold tracking-tight text-slate-800 leading-none flex items-center">
+                  <span>FI</span>
+                  <span className="ml-0.5 px-1.5 py-0.5 rounded-md bg-[#fcd5ce] border border-slate-800 text-slate-900">
+                    LOST
+                  </span>
+                </h1>
+                <span className="font-mono-tech text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#f8edd8] border border-slate-800 text-slate-800">
+                  v2.0
+                </span>
+              </div>
+              <p className="font-mono-tech text-[10px] sm:text-xs text-slate-700 font-bold mt-1 tracking-tight">
+                &gt;_ FILKOM_ITEM_LOCATOR
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="hidden md:flex items-center gap-2 bg-[#f8edd8] border-2 border-slate-800 px-3 py-1 rounded-full text-xs font-bold text-slate-800">
+            <div className="hidden md:flex items-center gap-2 bg-[#f8edd8] border-2 border-slate-800 px-3 py-1 rounded-full font-mono-tech text-xs font-bold text-slate-800">
               <span
                 className={`w-2 h-2 rounded-full ${
                   unclaimedItems.length > 0 ? 'bg-amber-500' : 'bg-emerald-500'
                 }`}
               ></span>
-              <span>{unclaimedItems.length} Barang Belum Diklaim</span>
+              <span>ACTIVE_ITEMS: {unclaimedItems.length}</span>
             </div>
 
             <button
@@ -161,10 +178,13 @@ export default function App() {
       {/* Hero & Search Section - Antique White */}
       <section className="bg-[#f8edd8] border-b-4 border-[#e9dac1] pt-10 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-800 mb-2">
+          <div className="inline-block font-mono-tech text-xs font-bold bg-[#c3e3f5] border-2 border-slate-800 px-3 py-1 rounded-full mb-3 shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]">
+            // LOST &amp; FOUND SYSTEM — FILKOM UB
+          </div>
+          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-slate-800 mb-2">
             Temukan Kembali Barangmu di Area FILKOM
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base font-semibold mb-6">
+          <p className="text-slate-600 text-sm sm:text-base font-medium mb-6">
             Cari barang temuan berdasarkan nama atau lokasi gedung, lalu verifikasi kepemilikanmu.
           </p>
 
@@ -176,7 +196,7 @@ export default function App() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Cari judul barang atau lokasi (misal: KTM, Charger, Gedung F)..."
+              placeholder="Query judul barang atau lokasi (misal: KTM, Charger, Gedung F)..."
               className="w-full pl-12 pr-10 py-3 rounded-xl bg-white text-slate-800 placeholder-slate-400 border-2 border-slate-800 focus:outline-none focus:ring-4 focus:ring-[#c3e3f5] text-sm sm:text-base shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]"
             />
             {searchQuery && (
@@ -202,7 +222,7 @@ export default function App() {
                   key={category}
                   type="button"
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold border-2 transition-all cursor-pointer ${
+                  className={`font-mono-tech px-4 py-1.5 rounded-full text-xs font-bold border-2 transition-all cursor-pointer ${
                     isActive
                       ? `${colStyle} border-slate-800 scale-105 shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]`
                       : 'bg-white text-slate-600 border-slate-300 hover:border-slate-800 hover:text-slate-800'
@@ -220,12 +240,11 @@ export default function App() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-5">
         {/* Bar Kontrol Tab Status & Toggle Peta */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 bg-white px-4 py-3 rounded-xl border-2 border-slate-800 shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]">
-          {/* Tab Pemisah Tersedia vs Arsip Diklaim */}
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => setActiveTab('Unclaimed')}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-extrabold border-2 transition cursor-pointer ${
+              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold border-2 transition cursor-pointer ${
                 activeTab === 'Unclaimed'
                   ? 'bg-[#f8edd8] text-slate-800 border-slate-800 shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]'
                   : 'bg-slate-50 text-slate-500 border-transparent hover:text-slate-800'
@@ -238,7 +257,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => setActiveTab('Claimed')}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-extrabold border-2 transition cursor-pointer ${
+              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold border-2 transition cursor-pointer ${
                 activeTab === 'Claimed'
                   ? 'bg-[#d8f3dc] text-slate-800 border-slate-800 shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]'
                   : 'bg-slate-50 text-slate-500 border-transparent hover:text-slate-800'
@@ -252,10 +271,10 @@ export default function App() {
           <button
             type="button"
             onClick={() => setShowMap((prev) => !prev)}
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#c3e3f5] hover:bg-[#a6cee3] text-slate-800 border-2 border-slate-800 transition cursor-pointer"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg font-mono-tech text-xs font-bold bg-[#c3e3f5] hover:bg-[#a6cee3] text-slate-800 border-2 border-slate-800 transition cursor-pointer"
           >
             <MapIcon className="w-3.5 h-3.5 text-slate-800" />
-            <span>{showMap ? 'Sembunyikan Peta' : 'Tampilkan Peta Kampus'}</span>
+            <span>{showMap ? 'HIDE_MAP' : 'SHOW_MAP'}</span>
           </button>
         </div>
 
@@ -273,18 +292,18 @@ export default function App() {
         {isLoading ? (
           <div className="bg-white rounded-2xl border-2 border-slate-800 p-16 text-center flex flex-col items-center justify-center shadow-[4px_4px_0px_0px_rgba(30,41,59,1)]">
             <Loader2 className="w-8 h-8 text-blue-600 animate-spin mb-3" />
-            <p className="text-sm font-bold text-slate-600">
-              Memuat data barang dari database...
+            <p className="font-mono-tech text-sm font-bold text-slate-600">
+              FETCHING_DATABASE_ITEMS...
             </p>
           </div>
         ) : filteredItems.length === 0 ? (
           <div className="bg-white rounded-2xl border-2 border-slate-800 p-12 text-center shadow-[4px_4px_0px_0px_rgba(30,41,59,1)]">
-            <h3 className="text-lg font-extrabold text-slate-800 mb-1">
+            <h3 className="text-lg font-bold text-slate-800 mb-1">
               {activeTab === 'Unclaimed'
                 ? 'Tidak ada barang yang belum diklaim'
                 : 'Belum ada riwayat barang yang diklaim'}
             </h3>
-            <p className="text-sm font-semibold text-slate-500 mb-4">
+            <p className="text-sm font-medium text-slate-500 mb-4">
               {activeTab === 'Unclaimed'
                 ? 'Semua barang temuan sudah kembali ke pemiliknya, atau ubah kata kunci pencarian.'
                 : 'Barang yang sudah berhasil diverifikasi dan diklaim akan muncul di arsip ini.'}
@@ -330,31 +349,31 @@ export default function App() {
                       className="w-full h-full object-cover hover:scale-105 transition duration-300"
                     />
                     <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2">
-                      <span className="px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-[#c3e3f5] text-slate-800 border border-slate-800">
+                      <span className="font-mono-tech px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-[#c3e3f5] text-slate-800 border border-slate-800">
                         {item.category}
                       </span>
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold border border-slate-800 ${
+                        className={`font-mono-tech px-2 py-0.5 rounded-full text-[10px] font-bold border border-slate-800 ${
                           isClaimed
                             ? 'bg-[#d8f3dc] text-slate-800'
                             : 'bg-[#ffedd5] text-slate-800'
                         }`}
                       >
-                        {isClaimed ? 'Selesai Diklaim' : 'Belum Diklaim'}
+                        {isClaimed ? 'CLAIMED' : 'UNCLAIMED'}
                       </span>
                     </div>
                   </div>
 
                   <div className="p-5 flex flex-col flex-1">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                      Ditemukan: {formattedDate}
+                    <span className="font-mono-tech text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+                      LOG_DATE: {formattedDate}
                     </span>
 
-                    <h3 className="text-base font-black text-slate-800 leading-snug mb-2 line-clamp-2">
+                    <h3 className="text-base font-bold text-slate-800 leading-snug mb-2 line-clamp-2">
                       {item.title}
                     </h3>
 
-                    <p className="text-xs font-semibold text-slate-600 mb-4 line-clamp-2 flex-1">
+                    <p className="text-xs font-medium text-slate-600 mb-4 line-clamp-2 flex-1">
                       {item.description}
                     </p>
 
@@ -367,7 +386,7 @@ export default function App() {
                       type="button"
                       disabled={isClaimed}
                       onClick={() => setSelectedClaimItem(item)}
-                      className={`w-full py-2 px-4 rounded-xl font-extrabold text-xs sm:text-sm border-2 transition-all cursor-pointer ${
+                      className={`w-full py-2 px-4 rounded-xl font-bold text-xs sm:text-sm border-2 transition-all cursor-pointer ${
                         isClaimed
                           ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-300'
                           : 'bg-[#c3e3f5] hover:bg-[#a6cee3] border-slate-800 active:translate-y-0.5 active:shadow-none shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]'
