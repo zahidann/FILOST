@@ -105,7 +105,7 @@ export default function App() {
                 <path
                   d="M32 10C22.0589 10 14 18.0589 14 28C14 40.5 32 54 32 54C32 54 50 40.5 50 28C50 18.0589 41.9411 10 32 10Z"
                   fill="#c3e3f5"
-                  stroke="#1e293b"
+                  stroke="#fcd5ce"
                   strokeWidth="4"
                   strokeLinejoin="round"
                 />
