@@ -6,54 +6,22 @@ import {
   X,
   Loader2,
   Map as MapIcon,
+  Archive,
+  PackageCheck,
 } from 'lucide-react';
 import ReportItemModal from './components/ReportItemModal';
 import ClaimModal from './components/ClaimModal';
 import CampusMap from './components/CampusMap';
 import { fetchItems } from './services/itemService';
 
-const FALLBACK_ITEMS = [
-  {
-    id: 1,
-    title: 'KTM Mahasiswa TIF a.n. Budi Santoso',
-    category: 'KTM',
-    status: 'Unclaimed',
-    location: 'Pos Satpam Gedung F',
-    description: 'Ditemukan di dekat parkiran motor timur Gedung F sekitar pukul 09.30 WIB.',
-    image_url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80',
-    secret_question: 'Berapa 3 digit terakhir NIM yang tertera di KTM?',
-    secret_answer: '042',
-    finder_contact: '0812-3456-7890 (Pos Satpam Gedung F)',
-    latitude: -7.9535,
-    longitude: 112.6148,
-    created_at: '2026-11-24T09:30:00Z',
-  },
-  {
-    id: 2,
-    title: 'Charger Laptop Lenovo Type-C 65W',
-    category: 'Elektronik',
-    status: 'Unclaimed',
-    location: 'Ruang F3.2 (Meja Tengah)',
-    description: 'Tertinggal setelah jam kuliah Pemrograman Web. Kabel tergulung rapi dengan pengikat velcro.',
-    image_url: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=600&q=80',
-    secret_question: 'Apa warna pengikat velcro pada kabel charger ini?',
-    secret_answer: 'hitam',
-    finder_contact: '0857-1122-3344 (Raka - TIF 24)',
-    latitude: -7.95365,
-    longitude: 112.61445,
-    created_at: '2026-11-24T11:15:00Z',
-  },
-];
-
 const CATEGORIES = ['Semua', 'KTM', 'Elektronik', 'Buku', 'Lainnya'];
 
-// Map kategori ke warna flat-pastel yang spesifik
 const CATEGORY_COLORS = {
-  'Semua': 'bg-[#c3e3f5] text-slate-800 border-[#9bcbe6]',
-  'KTM': 'bg-[#fcd5ce] text-slate-800 border-[#f8b4a6]',
-  'Elektronik': 'bg-[#d8f3dc] text-slate-800 border-[#b7e4c7]',
-  'Buku': 'bg-[#fde2e4] text-slate-800 border-[#fac5c9]',
-  'Lainnya': 'bg-[#e2e2e9] text-slate-800 border-[#c6c6d3]',
+  Semua: 'bg-[#c3e3f5] text-slate-800 border-[#9bcbe6]',
+  KTM: 'bg-[#fcd5ce] text-slate-800 border-[#f8b4a6]',
+  Elektronik: 'bg-[#d8f3dc] text-slate-800 border-[#b7e4c7]',
+  Buku: 'bg-[#fde2e4] text-slate-800 border-[#fac5c9]',
+  Lainnya: 'bg-[#e2e2e9] text-slate-800 border-[#c6c6d3]',
 };
 
 export default function App() {
@@ -61,6 +29,8 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Semua');
+  // Tab pemisah antara barang aktif ('Unclaimed') dan arsip ('Claimed')
+  const [activeTab, setActiveTab] = useState('Unclaimed');
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [selectedClaimItem, setSelectedClaimItem] = useState(null);
   const [showMap, setShowMap] = useState(true);
@@ -72,8 +42,8 @@ export default function App() {
         const data = await fetchItems();
         setItems(data);
       } catch (err) {
-        console.warn('Menggunakan fallback data:', err.message);
-        setItems(FALLBACK_ITEMS);
+        console.error('Gagal memuat data:', err.message);
+        setItems([]);
       } finally {
         setIsLoading(false);
       }
@@ -82,8 +52,21 @@ export default function App() {
     loadItems();
   }, []);
 
+  const unclaimedItems = useMemo(
+    () => items.filter((item) => item.status !== 'Claimed'),
+    [items]
+  );
+
+  const claimedItems = useMemo(
+    () => items.filter((item) => item.status === 'Claimed'),
+    [items]
+  );
+
   const filteredItems = useMemo(() => {
-    return items.filter((item) => {
+    const sourceList =
+      activeTab === 'Unclaimed' ? unclaimedItems : claimedItems;
+
+    return sourceList.filter((item) => {
       const matchesCategory =
         selectedCategory === 'Semua' || item.category === selectedCategory;
       const matchesSearch =
@@ -91,10 +74,11 @@ export default function App() {
         item.location.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [items, searchQuery, selectedCategory]);
+  }, [activeTab, unclaimedItems, claimedItems, searchQuery, selectedCategory]);
 
   const handleAddItem = (newItem) => {
     setItems((prev) => [newItem, ...prev]);
+    setActiveTab('Unclaimed');
   };
 
   const handleClaimSuccess = (itemId) => {
@@ -105,15 +89,12 @@ export default function App() {
     );
   };
 
-  const unclaimedCount = items.filter((i) => i.status === 'Unclaimed').length;
-
   return (
     <div className="min-h-screen bg-[#faf6f0] text-slate-800 font-sans pb-16">
       {/* Header Flat - Pastel Sky */}
       <header className="bg-[#c3e3f5] border-b-4 border-[#a6cee3] sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-center gap-3">
-            {/* Logo Custom SVG Flat Pastel */}
             <div className="w-11 h-11 rounded-xl bg-[#f8edd8] border-2 border-slate-800 flex items-center justify-center shrink-0 shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]">
               <svg
                 viewBox="0 0 64 64"
@@ -157,8 +138,12 @@ export default function App() {
 
           <div className="flex items-center gap-3">
             <div className="hidden md:flex items-center gap-2 bg-[#f8edd8] border-2 border-slate-800 px-3 py-1 rounded-full text-xs font-bold text-slate-800">
-              <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-              <span>{unclaimedCount} Barang Belum Diklaim</span>
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  unclaimedItems.length > 0 ? 'bg-amber-500' : 'bg-emerald-500'
+                }`}
+              ></span>
+              <span>{unclaimedItems.length} Barang Belum Diklaim</span>
             </div>
 
             <button
@@ -209,7 +194,9 @@ export default function App() {
           <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
             {CATEGORIES.map((category) => {
               const isActive = selectedCategory === category;
-              const colStyle = CATEGORY_COLORS[category] || 'bg-white text-slate-800 border-slate-300';
+              const colStyle =
+                CATEGORY_COLORS[category] ||
+                'bg-white text-slate-800 border-slate-300';
               return (
                 <button
                   key={category}
@@ -231,35 +218,52 @@ export default function App() {
 
       {/* Main Container */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-5">
-        {/* Toggle Peta Bar */}
-        <div className="flex items-center justify-between gap-3 mb-6 bg-white px-4 py-3 rounded-xl border-2 border-slate-800 shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]">
-          <p className="text-xs sm:text-sm font-bold text-slate-700">
-            Menampilkan{' '}
-            <span className="font-extrabold text-blue-600">{filteredItems.length}</span>{' '}
-            barang temuan
-            {selectedCategory !== 'Semua' && (
-              <span>
-                {' '}
-                pada kategori <span className="font-extrabold text-indigo-600">{selectedCategory}</span>
-              </span>
-            )}
-          </p>
+        {/* Bar Kontrol Tab Status & Toggle Peta */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 bg-white px-4 py-3 rounded-xl border-2 border-slate-800 shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]">
+          {/* Tab Pemisah Tersedia vs Arsip Diklaim */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setActiveTab('Unclaimed')}
+              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-extrabold border-2 transition cursor-pointer ${
+                activeTab === 'Unclaimed'
+                  ? 'bg-[#f8edd8] text-slate-800 border-slate-800 shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]'
+                  : 'bg-slate-50 text-slate-500 border-transparent hover:text-slate-800'
+              }`}
+            >
+              <PackageCheck className="w-4 h-4" />
+              <span>Belum Diklaim ({unclaimedItems.length})</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('Claimed')}
+              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-extrabold border-2 transition cursor-pointer ${
+                activeTab === 'Claimed'
+                  ? 'bg-[#d8f3dc] text-slate-800 border-slate-800 shadow-[2px_2px_0px_0px_rgba(30,41,59,1)]'
+                  : 'bg-slate-50 text-slate-500 border-transparent hover:text-slate-800'
+              }`}
+            >
+              <Archive className="w-4 h-4" />
+              <span>Riwayat Diklaim ({claimedItems.length})</span>
+            </button>
+          </div>
 
           <button
             type="button"
             onClick={() => setShowMap((prev) => !prev)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#c3e3f5] hover:bg-[#a6cee3] text-slate-800 border-2 border-slate-800 transition cursor-pointer"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#c3e3f5] hover:bg-[#a6cee3] text-slate-800 border-2 border-slate-800 transition cursor-pointer"
           >
             <MapIcon className="w-3.5 h-3.5 text-slate-800" />
             <span>{showMap ? 'Sembunyikan Peta' : 'Tampilkan Peta Kampus'}</span>
           </button>
         </div>
 
-        {/* Peta */}
+        {/* Peta hanya menerima barang yang BELUM diklaim */}
         {showMap && (
           <div className="border-2 border-slate-800 rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] mb-8 bg-white">
             <CampusMap
-              items={filteredItems}
+              items={unclaimedItems}
               onSelectClaimItem={(item) => setSelectedClaimItem(item)}
             />
           </div>
@@ -276,21 +280,27 @@ export default function App() {
         ) : filteredItems.length === 0 ? (
           <div className="bg-white rounded-2xl border-2 border-slate-800 p-12 text-center shadow-[4px_4px_0px_0px_rgba(30,41,59,1)]">
             <h3 className="text-lg font-extrabold text-slate-800 mb-1">
-              Barang tidak ditemukan
+              {activeTab === 'Unclaimed'
+                ? 'Tidak ada barang yang belum diklaim'
+                : 'Belum ada riwayat barang yang diklaim'}
             </h3>
             <p className="text-sm font-semibold text-slate-500 mb-4">
-              Cari kata kunci lain atau ubah filter kategori ke "Semua".
+              {activeTab === 'Unclaimed'
+                ? 'Semua barang temuan sudah kembali ke pemiliknya, atau ubah kata kunci pencarian.'
+                : 'Barang yang sudah berhasil diverifikasi dan diklaim akan muncul di arsip ini.'}
             </p>
-            <button
-              type="button"
-              onClick={() => {
-                setSearchQuery('');
-                setSelectedCategory('Semua');
-              }}
-              className="px-4 py-2 bg-[#c3e3f5] hover:bg-[#a6cee3] border-2 border-slate-800 font-bold text-sm rounded-lg transition cursor-pointer"
-            >
-              Reset Filter
-            </button>
+            {(searchQuery || selectedCategory !== 'Semua') && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedCategory('Semua');
+                }}
+                className="px-4 py-2 bg-[#c3e3f5] hover:bg-[#a6cee3] border-2 border-slate-800 font-bold text-sm rounded-lg transition cursor-pointer"
+              >
+                Reset Filter
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -307,7 +317,11 @@ export default function App() {
               return (
                 <article
                   key={item.id}
-                  className="bg-white rounded-2xl overflow-hidden border-2 border-slate-800 shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] transition-all flex flex-col"
+                  className={`bg-white rounded-2xl overflow-hidden border-2 border-slate-800 shadow-[4px_4px_0px_0px_rgba(30,41,59,1)] transition-all flex flex-col ${
+                    isClaimed
+                      ? 'opacity-85'
+                      : 'hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(30,41,59,1)]'
+                  }`}
                 >
                   <div className="relative h-44 bg-[#f8edd8] overflow-hidden border-b-2 border-slate-800">
                     <img
@@ -320,13 +334,13 @@ export default function App() {
                         {item.category}
                       </span>
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold border ${
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold border border-slate-800 ${
                           isClaimed
-                            ? 'bg-[#d8f3dc] text-slate-800 border-[#a2d2a9]'
-                            : 'bg-[#ffedd5] text-slate-800 border-[#fed7aa]'
+                            ? 'bg-[#d8f3dc] text-slate-800'
+                            : 'bg-[#ffedd5] text-slate-800'
                         }`}
                       >
-                        {item.status}
+                        {isClaimed ? 'Selesai Diklaim' : 'Belum Diklaim'}
                       </span>
                     </div>
                   </div>

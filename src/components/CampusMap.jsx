@@ -7,7 +7,6 @@ import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { MapPin } from 'lucide-react';
 
-// Perbaikan ikon marker default Leaflet agar tidak broken saat di-bundle oleh Vite
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
@@ -15,12 +14,13 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-// Koordinat tepat di kompleks Gedung F & Junction FILKOM UB
 const FILKOM_CENTER = [-7.9538, 112.6146];
 
 export default function CampusMap({ items, onSelectClaimItem }) {
-  const mappableItems = items.filter(
+  // Hanya tampilkan pin untuk barang yang BELUM diklaim (Unclaimed)
+  const activeUnclaimedItems = items.filter(
     (item) =>
+      item.status !== 'Claimed' &&
       typeof item.latitude === 'number' &&
       typeof item.longitude === 'number' &&
       !Number.isNaN(item.latitude) &&
@@ -28,24 +28,24 @@ export default function CampusMap({ items, onSelectClaimItem }) {
   );
 
   return (
-    <section className="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden mb-8">
-      {/* Header Peta */}
-      <div className="bg-[#0B192C] text-white px-5 py-3.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-sky-500/20">
+    <section className="bg-white overflow-hidden">
+      {/* Header Peta Flat Pastel */}
+      <div className="bg-[#c3e3f5] text-slate-800 px-5 py-3.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b-2 border-slate-800">
         <div className="flex items-center gap-2.5">
-          <div className="p-1.5 rounded-lg bg-sky-500/20 text-sky-400">
+          <div className="p-1.5 rounded-lg bg-[#f8edd8] border-2 border-slate-800 text-slate-800">
             <MapPin className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm sm:text-base font-bold leading-tight">
+            <h3 className="text-sm sm:text-base font-black leading-tight">
               Peta Persebaran Barang Temuan — FILKOM UB
             </h3>
-            <p className="text-xs text-sky-200/80">
-              Klik pin lokasi di peta untuk melihat foto dan judul barang.
+            <p className="text-xs font-semibold text-slate-700">
+              Hanya menampilkan titik lokasi barang yang belum diklaim.
             </p>
           </div>
         </div>
-        <span className="text-xs font-medium text-sky-300 bg-slate-900/90 border border-sky-500/30 px-3 py-1 rounded-full self-start sm:self-auto">
-          {mappableItems.length} Titik Lokasi Aktif
+        <span className="text-xs font-extrabold text-slate-800 bg-[#f8edd8] border-2 border-slate-800 px-3 py-1 rounded-full self-start sm:self-auto">
+          {activeUnclaimedItems.length} Titik Lokasi Aktif
         </span>
       </div>
 
@@ -62,59 +62,49 @@ export default function CampusMap({ items, onSelectClaimItem }) {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
-          {mappableItems.map((item) => {
-            const isClaimed = item.status === 'Claimed';
-
-            return (
-              <Marker
-                key={item.id}
-                position={[item.latitude, item.longitude]}
-              >
-                <Popup className="filost-popup" minWidth={210} maxWidth={240}>
-                  <div className="space-y-2 py-0.5">
-                    <div className="relative h-28 w-full rounded-lg overflow-hidden bg-slate-100">
-                      <img
-                        src={item.image_url}
-                        alt={item.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <span
-                        className={`absolute top-1.5 right-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          isClaimed
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : 'bg-amber-100 text-amber-800'
-                        }`}
-                      >
-                        {item.status}
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="text-[10px] font-semibold uppercase tracking-wider text-sky-600">
-                        {item.category}
-                      </span>
-                      <h4 className="text-sm font-bold text-slate-900 leading-snug line-clamp-2">
-                        {item.title}
-                      </h4>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        {item.location}
-                      </p>
-                    </div>
-
-                    {!isClaimed && onSelectClaimItem && (
-                      <button
-                        type="button"
-                        onClick={() => onSelectClaimItem(item)}
-                        className="w-full py-1.5 px-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition cursor-pointer"
-                      >
-                        Klaim Barang
-                      </button>
-                    )}
+          {activeUnclaimedItems.map((item) => (
+            <Marker
+              key={item.id}
+              position={[item.latitude, item.longitude]}
+            >
+              <Popup className="filost-popup" minWidth={210} maxWidth={240}>
+                <div className="space-y-2 py-0.5">
+                  <div className="relative h-28 w-full rounded-lg overflow-hidden bg-[#f8edd8] border border-slate-300">
+                    <img
+                      src={item.image_url}
+                      alt={item.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <span className="absolute top-1.5 right-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ffedd5] text-slate-800 border border-slate-800">
+                      {item.status}
+                    </span>
                   </div>
-                </Popup>
-              </Marker>
-            );
-          })}
+
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600">
+                      {item.category}
+                    </span>
+                    <h4 className="text-sm font-black text-slate-900 leading-snug line-clamp-2">
+                      {item.title}
+                    </h4>
+                    <p className="text-xs font-medium text-slate-600 mt-0.5">
+                      {item.location}
+                    </p>
+                  </div>
+
+                  {onSelectClaimItem && (
+                    <button
+                      type="button"
+                      onClick={() => onSelectClaimItem(item)}
+                      className="w-full py-1.5 px-3 rounded-lg bg-[#c3e3f5] hover:bg-[#a6cee3] text-slate-800 border border-slate-800 text-xs font-extrabold transition cursor-pointer"
+                    >
+                      Klaim Barang
+                    </button>
+                  )}
+                </div>
+              </Popup>
+            </Marker>
+          ))}
         </MapContainer>
       </div>
     </section>
